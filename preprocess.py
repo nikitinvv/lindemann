@@ -5,9 +5,10 @@ import h5py
 import sys
 
 ##################################### Inputs #########################################################################
-file_name = '/local/data/2020-01/vnikitin/Continuous_1B_8400eV_100ms_2_1150.h5'
-sino_start = 0
-sino_end = 1024
+file_name = '/data/staff/tomograms/viknik/Lindemann/Continuous_1B_8400eV_100ms_2_1150.h5'
+#file_name = '/local/data/2020-01/vnikitin/Continuous_1B_8400eV_100ms_2_1150.h5'
+sino_start = 600
+sino_end = 600+128
 flat_field_norm = True
 flat_field_drift_corr = True  # Correct the intensity drift
 remove_rings = True
@@ -37,7 +38,7 @@ if __name__ == "__main__":
     prj, flat, dark, theta = dxchange.read_aps_32id(
         file_name, sino=(sino_start, sino_end))
     # set angles and dark field        
-    theta = np.arange(0,prj.shape[0])*theta[1]*180/np.pi
+    theta = np.arange(0,prj.shape[0])*theta[1]
     dark *= 0
     # preprocess
     prj = preprocess_data(prj, flat, dark, FF_norm=flat_field_norm, remove_rings=remove_rings,

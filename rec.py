@@ -47,6 +47,7 @@ def myplot(u, psi, flow):
         os.makedirs('tmp'+'_'+str(ntheta)+'/')
     plt.savefig('tmp'+'_'+str(ntheta)+'/flow'+str(k))
     plt.close()
+    print(np.linalg.norm(flow))
 
 
 def update_penalty(psi, h, h0, rho):
@@ -61,8 +62,9 @@ def update_penalty(psi, h, h0, rho):
 
 if __name__ == "__main__":
 
-    data = np.load('prj.npy').astype('float32')#[0:2010]
-    theta = np.load('theta.npy').astype('float32')#[0:2010]
+    data = np.load('prj.npy').astype('float32')[0:1005]
+    theta = np.load('theta.npy').astype('float32')[0:1005]
+    print(theta)
     # Model parameters
     [ntheta,nz,n] = data.shape
     print(data.shape)
@@ -74,9 +76,7 @@ if __name__ == "__main__":
     psi = data.copy()
     lamd = np.zeros([ntheta, nz, n], dtype='complex64')
     flow = np.zeros([ntheta, 2], dtype='float32')
-    # optical flow parameters
-    pars = [0.5, 1, 256, 4, 5, 1.1, 4]
-
+   
     # ADMM solver
     with tc.SolverTomo(theta, ntheta, nz, n, pnz, center) as tslv:
         # ucg = tslv.cg_tomo_batch2(data, u, 8)
@@ -87,10 +87,10 @@ if __name__ == "__main__":
             h0 = psi
             for k in range(niter):
                 # registration
-                flow = dslv.registration_shift_batch(psi, data, flow)
+                flow = dslv.registration_shift_batch(psi, data, 1)
                 
                 # deformation subproblem
-                psi = dslv.cg_deform(data, psi, flow, 4,
+                psi = dslv.cg_shift(data, psi, flow, 4,
                                      tslv.fwd_tomo_batch(u)+lamd/rho, rho)
                 # tomo subproblem
                 u = tslv.cg_tomo_batch(psi-lamd/rho, u, 4)
@@ -107,7 +107,7 @@ if __name__ == "__main__":
                     lagr[1] = np.sum(np.real(np.conj(lamd)*(h-psi)))
                     lagr[2] = rho*np.linalg.norm(h-psi)**2
                     lagr[3] = np.sum(lagr[0:3])
-                    print(k, pars[2], np.linalg.norm(flow), rho, lagr)
+                    print(k, np.linalg.norm(flow), rho, lagr)
                     dxchange.write_tiff_stack(
                         u.real,  'tmp'+'_'+str(ntheta)+'/rect'+str(k)+'/r', overwrite=True)
                     dxchange.write_tiff_stack(
@@ -116,4 +116,3 @@ if __name__ == "__main__":
                 # Updates
                 rho = update_penalty(psi, h, h0, rho)
                 h0 = h
-#                pars[2] -= 2
