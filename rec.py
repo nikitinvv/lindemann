@@ -62,8 +62,8 @@ def update_penalty(psi, h, h0, rho):
 
 if __name__ == "__main__":
 
-    data = np.load('prj.npy').astype('float32')[0:1005]
-    theta = np.load('theta.npy').astype('float32')[0:1005]
+    data = np.load('prj.npy').astype('float32')#[0:6025]
+    theta = np.load('theta.npy').astype('float32')#[0:2010]
     print(theta)
     # Model parameters
     [ntheta,nz,n] = data.shape
@@ -79,7 +79,7 @@ if __name__ == "__main__":
    
     # ADMM solver
     with tc.SolverTomo(theta, ntheta, nz, n, pnz, center) as tslv:
-        # ucg = tslv.cg_tomo_batch2(data, u, 8)
+        # ucg = tslv.cg_tomo_batch(data, u, 64)
         # dxchange.write_tiff_stack(
                         # ucg.real,  'cg'+'_'+str(ntheta)+'/rect'+'/r', overwrite=True)
         with dc.SolverDeform(ntheta, nz, n) as dslv:
@@ -87,13 +87,13 @@ if __name__ == "__main__":
             h0 = psi
             for k in range(niter):
                 # registration
-                flow = dslv.registration_shift_batch(psi, data, 1)
+                flow = dslv.registration_shift_batch(data, psi, 10)
                 
                 # deformation subproblem
                 psi = dslv.cg_shift(data, psi, flow, 4,
                                      tslv.fwd_tomo_batch(u)+lamd/rho, rho)
                 # tomo subproblem
-                u = tslv.cg_tomo_batch(psi-lamd/rho, u, 4)
+                u = tslv.cg_tomo_batch2(psi-lamd/rho, u, 4)
                 h = tslv.fwd_tomo_batch(u)
                 # lambda update
                 lamd = lamd+rho*(h-psi)
@@ -112,7 +112,6 @@ if __name__ == "__main__":
                         u.real,  'tmp'+'_'+str(ntheta)+'/rect'+str(k)+'/r', overwrite=True)
                     dxchange.write_tiff_stack(
                         psi.real, 'tmp'+'_'+str(ntheta)+'/psir'+str(k)+'/r',  overwrite=True)
-
-                # Updates
+                    np.save('tmp'+'_'+str(ntheta)+'/flow'+str(k), flow)                # Updates
                 rho = update_penalty(psi, h, h0, rho)
                 h0 = h
