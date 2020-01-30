@@ -37,7 +37,7 @@ def preprocess_data(prj, flat, dark, FF_norm=flat_field_norm, remove_rings=remov
 
 if __name__ == "__main__":
     proj_start = np.int(sys.argv[1])
-    proj_end = proj_start+1005
+    proj_end = proj_start+6025
     # read data
     prj, flat, dark, theta = dxchange.read_aps_32id(
         file_name, sino=(sino_start, sino_end),proj=(proj_start,proj_end))
@@ -51,6 +51,6 @@ if __name__ == "__main__":
     prj = preprocess_data(prj, flat, dark, FF_norm=flat_field_norm, remove_rings=remove_rings,
                           FF_drift_corr=flat_field_drift_corr, downsapling=binning)                              
     #dxchange.write_tiff(prj,'prj')                          
-    np.save('prj'+file_name[-7:-3]+'_'+str(proj_start),prj)        
-    np.save('theta'+file_name[-7:-3]+'_'+str(proj_start),theta)  
+    np.save('aprj'+file_name[-7:-3]+'_'+str(proj_start),prj)        
+    np.save('atheta'+file_name[-7:-3]+'_'+str(proj_start),theta)  
         

@@ -65,12 +65,12 @@ if __name__ == "__main__":
     name = sys.argv[1]
     part = sys.argv[2]
     center = np.float(sys.argv[3])
-    data = np.load('prj'+name+'_'+part+'.npy').astype('float32')
-    theta = np.load('theta'+name+'_'+part+'.npy').astype('float32')
+    data = np.load('aprj'+name+'_'+part+'.npy').astype('float32')
+    theta = np.load('atheta'+name+'_'+part+'.npy').astype('float32')
 
     [ntheta,nz,n] = data.shape
-    pnz = 128  # number of slice partitions for simultaneous processing in tomography
-    niter = 128
+    pnz = 32  # number of slice partitions for simultaneous processing in tomography
+    niter = 64
     # Model parameters
     [ntheta,nz,n] = data.shape
     u = np.zeros([nz, n, n], dtype='complex64')
