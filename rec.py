@@ -6,7 +6,7 @@ import deformcg as dc
 import sys
 import os
 import matplotlib.pyplot as plt
-
+outdir = './'
 def myplot(u, psi, flow):
     [ntheta, nz, n] = psi.shape
 
@@ -62,16 +62,17 @@ def update_penalty(psi, h, h0, rho):
 
 if __name__ == "__main__":
 
-    data = np.load('prj.npy').astype('float32')#[0:6025]
-    theta = np.load('theta.npy').astype('float32')#[0:2010]
-    print(theta)
+    name = sys.argv[1]
+    part = sys.argv[2]
+    center = np.float(sys.argv[3])
+    data = np.load('prj'+name+'_'+part+'.npy').astype('float32')
+    theta = np.load('theta'+name+'_'+part+'.npy').astype('float32')
+
+    [ntheta,nz,n] = data.shape
+    pnz = 128  # number of slice partitions for simultaneous processing in tomography
+    niter = 128
     # Model parameters
     [ntheta,nz,n] = data.shape
-    print(data.shape)
-    center = n/2  # rotation center
-    pnz = 32  # number of slice partitions for simultaneous processing in tomography
-    niter = 128
-    # initial guess
     u = np.zeros([nz, n, n], dtype='complex64')
     psi = data.copy()
     lamd = np.zeros([ntheta, nz, n], dtype='complex64')
@@ -79,19 +80,18 @@ if __name__ == "__main__":
    
     # ADMM solver
     with tc.SolverTomo(theta, ntheta, nz, n, pnz, center) as tslv:
-        # ucg = tslv.cg_tomo_batch(data, u, 64)
-        # dxchange.write_tiff_stack(
-                        # ucg.real,  'cg'+'_'+str(ntheta)+'/rect'+'/r', overwrite=True)
         with dc.SolverDeform(ntheta, nz, n) as dslv:
             rho = 0.5
             h0 = psi
             for k in range(niter):
                 # registration
-                flow = dslv.registration_shift_batch(data, psi, 10)
+                flow = dslv.registration_shift_batch(psi, data, 100)
                 
                 # deformation subproblem
-                psi = dslv.cg_shift(data, psi, flow, 4,
-                                     tslv.fwd_tomo_batch(u)+lamd/rho, rho)
+                #psi = dslv.cg_shift(data, psi, flow, 4,
+                 #                   tslv.fwd_tomo_batch(u)+lamd/rho, rho)
+                psi = (dslv.apply_shift_batch(data, -flow) +
+                       rho*tslv.fwd_tomo_batch(u)+lamd)/(1+rho)                                        
                 # tomo subproblem
                 u = tslv.cg_tomo_batch2(psi-lamd/rho, u, 4)
                 h = tslv.fwd_tomo_batch(u)
@@ -99,7 +99,6 @@ if __name__ == "__main__":
                 lamd = lamd+rho*(h-psi)
 
                 # checking intermediate results
-                myplot(u, psi, flow)
                 if(np.mod(k, 4) == 0):  # check Lagrangian
                     Tpsi = dslv.apply_shift_batch(psi, flow)
                     lagr = np.zeros(4)
@@ -109,9 +108,9 @@ if __name__ == "__main__":
                     lagr[3] = np.sum(lagr[0:3])
                     print(k, np.linalg.norm(flow), rho, lagr)
                     dxchange.write_tiff_stack(
-                        u.real,  'tmp'+'_'+str(ntheta)+'/rect'+str(k)+'/r', overwrite=True)
+                        u.real,  outdir+'/'+name+'_'+part+'n/tmp'+'_'+str(ntheta)+'_'+'/rect'+str(k)+'/r', overwrite=True)
                     dxchange.write_tiff_stack(
-                        psi.real, 'tmp'+'_'+str(ntheta)+'/psir'+str(k)+'/r',  overwrite=True)
-                    np.save('tmp'+'_'+str(ntheta)+'/flow'+str(k), flow)                # Updates
+                        psi.real, outdir+'/'+name+'_'+part+'n/tmp'+'_'+str(ntheta)+'_'+'/psir'+str(k)+'/r',  overwrite=True)
+                    np.save(outdir+'/'+name+'_'+part+'n/tmp'+'_'+str(ntheta)+'_'+'/flow'+str(k), flow)                # Updates
                 rho = update_penalty(psi, h, h0, rho)
                 h0 = h
