@@ -68,10 +68,13 @@ if __name__ == "__main__":
     theta = np.load('theta'+name+'_'+part+'.npy').astype('float32')
     # Model parameters
     [ntheta,nz,n] = data.shape
-    data = data[:,nz//2:nz//2+1]    
+    data = data[:,nz//2:nz//2+2]    
     
     # initial guess
     u = np.zeros([1, n, n], dtype='complex64')
+    print(data.shape)
+    print(theta)
+    print(np.linalg.norm(data))
     for center in range(n//2-10,n//2+10):
         print(center)
         with tc.SolverTomo(theta, ntheta, 1, n, 1, center) as tslv:
