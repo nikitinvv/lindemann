@@ -21,17 +21,21 @@ def takephi(ntheta):
 
 if __name__ == "__main__":
 
-    data = np.array(np.load("../../../aprj1149_0.npy").astype('float32'),order='C')
-    theta = np.array(np.load("../../../atheta1149_0.npy").astype('float32'),order='C')
-    [ns, ntheta, n] = data.shape
+    dir = '/data/staff/tomograms/viknik/Lindemann/'
+    data = np.load(dir+"bin1prj1149_0.npy").astype('float32')
+    theta = np.array(np.load(dir+"bin1theta1149_0.npy").astype('float32'),order='C')
+
+    data = np.array(data.swapaxes(0,1),order='C')
+  
+    [ns,ntheta,n]=data.shape
     print(data.shape)
     #exit()
-    rot_center = 149 # rotation center
-    lambda0 = 1e-3  # regularization parameter 1
+    rot_center = 298 # rotation center
+    lambda0 = np.float(sys.argv[1])  # regularization parameter 1
     lambda1 = 4  # regularization parameter 2
-    nsp = 4 # number of slices to process simultaniously by gpus
-    ngpus = 1 # number of gpus
-    niter = 128  # number of ADMM iterations
+    nsp = 1 # number of slices to process simultaniously by gpus
+    ngpus = 4 # number of gpus
+    niter = 256  # number of ADMM iterations
     titer = 4  # number of inner tomography iterations
     
     # take basis functions for decomosition 
