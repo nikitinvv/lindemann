@@ -1,0 +1,13 @@
+
+{
+    "1127": {
+        "file_name": "Continuous_1C_8400eV_100ms_1_1127.h5",       
+        "file_name_flat": "Continuous_1C_8400eV_100ms_1_1127.h5",
+        "sino_start": 512, 
+        "sino_end": 2048,
+        "bin": 2, 
+        "center": 1200, 
+        "tv": 1e-3,
+        "niter": 16
+    }
+}
