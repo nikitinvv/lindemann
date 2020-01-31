@@ -1,9 +1,9 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 
-shifts0 = np.load('1150_4020n/tmp_1005_/flow52.npy')
-shifts1 = np.load('1150_4020n/tmp_1005_/flow56.npy')
-shifts2 = np.load('1150_4020n/tmp_1005_/flow60.npy')
+shifts0 = np.load('1127_1005n/tmp_1005_/flow32.npy')
+shifts1 = np.load('1127_1005n/tmp_1005_/flow48.npy')
+shifts2 = np.load('1127_1005n/tmp_1005_/flow64.npy')
 # shifts0 = np.load('1150_0/tmp_1005_1e-06/flow8.npy')
 # shifts1 = np.load('1150_0/tmp_1005_1e-06/flow12.npy')
 # shifts2 = np.load('1150_0/tmp_1005_1e-06/flow16.npy')
