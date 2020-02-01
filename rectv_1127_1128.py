@@ -34,6 +34,7 @@ if __name__ == "__main__":
     fid = sys.argv[2] # dataset id, 1127,1128,1136,1137,1149,1150,1156,1157
     proj_start = int(sys.argv[3]) # projection start
     proj_end = int(sys.argv[4]) # projection end # note: ~1005 projections correspond to 180 degrees
+    center = float(sys.argv[5]) 
       #read json file
     with open('info_files.json') as f:
         jfile = json.load(f)
@@ -54,7 +55,7 @@ if __name__ == "__main__":
     data[data<0] = 0
     theta = np.array(theta.astype('float32'),order='C')
     [ns,ntheta,n] = data.shape    
-    
+    jfile[fid]['center'] = center
     with tomorectv3d.Solver(n, ntheta, ns, jfile[fid]['nsp'], jfile[fid]['method'], jfile[fid]['ngpus'], jfile[fid]['center']/pow(2,jfile[fid]['bin']), jfile[fid]['tv']) as cl:                              
         cl.settheta(theta)
         # reconstruction with 3d tv

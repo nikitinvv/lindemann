@@ -3,79 +3,79 @@
     "1127": {
         "file_name": "Continuous_1C_8400eV_100ms_1_1127.h5",     
         "file_name_flat": "Continuous_1C_8400eV_100ms_1_1127.h5",
-        "sino_start": 1024, 
-        "sino_end": 1040,
+        "sino_start": 512, 
+        "sino_end": 2048,
         "bin": 2, 
         "center": 1165, 
         "ngpus": 1, 
         "nsp": 4, 
         "tv": 8e-3,
         "method": 0,
-        "niter": 128
+        "niter": 256
     },
     "1128": {
         "file_name": "Continuous_1C_8400eV_100ms_2_1128.h5",       
         "file_name_flat": "Continuous_1C_8400eV_100ms_2_1128.h5",
-        "sino_start": 1024, 
-        "sino_end": 1040,
+        "sino_start": 512, 
+        "sino_end": 2048,
         "bin": 2, 
         "center": 1165, 
         "ngpus": 1, 
         "nsp": 4, 
         "tv": 8e-3,
         "method": 0,
-        "niter": 128
+        "niter": 256
     },
     "1136": {
         "file_name": "Continuous_2D_8400eV_500ms_1_1136.h5",       
         "file_name_flat": "Continuous_2D_8400eV_500ms_1_1136.h5",
-        "sino_start": 1024, 
-        "sino_end": 1056,
+        "sino_start": 512, 
+        "sino_end": 2048,
         "bin": 2, 
         "center": 1216, 
         "ngpus": 1, 
         "nsp": 8, 
         "tv": 1.2e-2,
         "method": 0,
-        "niter": 128
+        "niter": 256
     },
     "1137": {
         "file_name": "Continuous_2D_8400eV_500ms_2_1137.h5",       
         "file_name_flat": "Continuous_2D_8400eV_500ms_2_1137.h5",
-        "sino_start": 1024, 
-        "sino_end": 1056,
+        "sino_start": 512, 
+        "sino_end": 2048,
         "bin": 2, 
         "center": 1200, 
         "ngpus": 1, 
         "nsp": 8,         
         "tv": 1.2e-2,
         "method": 0,
-        "niter": 128
+        "niter": 256
     },
     "1149": {
         "file_name": "Continuous_1B_8400eV_100ms_1_1149.h5",       
         "file_name_flat": "Continuous_1B_8400eV_100ms_2_1150.h5",
-        "sino_start": 512, 
-        "sino_end": 528,
+        "sino_start": 256, 
+        "sino_end": 1024,
         "bin": 1, 
         "center": 596, 
         "ngpus": 1, 
         "nsp": 8, 
         "tv": 1.5e-2,
         "method": 0,
-        "niter": 32
+        "niter": 256
     },
     "1150": {
         "file_name": "Continuous_1B_8400eV_100ms_2_1150.h5",       
         "file_name_flat": "Continuous_1B_8400eV_100ms_2_1150.h5",
-        "sino_start": 512, 
-        "sino_end": 528,
+        "sino_start": 256, 
+        "sino_end": 1024,
         "bin": 1, 
         "center": 592, 
         "ngpus": 1, 
         "nsp": 8, 
         "tv": 1.5e-2,
         "method": 0,
-        "niter": 32
+        "niter": 256
     }
 }
